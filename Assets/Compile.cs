@@ -11,7 +11,7 @@ public class Compile : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        compile.Clear();
     }
 
     // Update is called once per frame
@@ -29,12 +29,23 @@ public class Compile : MonoBehaviour
         foreach(GameObject block in blockCount) {
             blocks.Add(block.gameObject.transform.parent.gameObject.GetComponent<Block>());
         }
-        
-        getConnectedBlockID(blocks[0]);
+
+
+
+
+
+        compile.Add(0);
+        foreach (Block block in blocks) {
+            if(block.uniqueID == 0) {
+                getConnectedBlockID(block);
+            }
+        }
        
 
+       
         for(int i = 0; i < compile.Count; i++) {
             print(compile[i]);
+            //getConnectedBlockID(blocks[i]);
         }
 
     }     
@@ -42,21 +53,29 @@ public class Compile : MonoBehaviour
 
 
     public void getConnectedBlockID (Block block){
+      
+       
 
-        
-        foreach (Pin pin in block.pins) {
-            if (compile.Contains(pin.connectedBlock.GetComponent<Block>().uniqueID)) { return; }
-            if (pin.isConnected) {
-                
-                if(block != pin.connectedBlock.GetComponent<Block>()  ) {
-                    print(block.uniqueID + " connected to " + pin.connectedBlock.GetComponent<Block>().uniqueID);
-                    getConnectedBlockID(pin.connectedBlock.GetComponent<Block>());
-                    compile.Add(block.uniqueID);
-
-
+         foreach (Pin pin in block.pins) {
+             if (pin.isConnected) {
+                if (compile.Contains(pin.connectedBlock.GetComponent<Block>().uniqueID)) {
+                    continue;
                 }
 
+                if (block.uniqueID == -1) {
+                 
+                }
+                compile.Add(pin.connectedBlock.GetComponent<Block>().uniqueID);
+                    getConnectedBlockID(pin.connectedBlock.GetComponent<Block>());
+                    print("adding pin " + pin.connectedBlock.GetComponent<Block>().uniqueID);
+
+                }
             }
+
+
+        if (block.uniqueID == -1) {
+            compile.Add(-1);
+            return;
         }
 
 

@@ -116,7 +116,7 @@ GameObject:
   - component: {fileID: 5071228924744867002}
   - component: {fileID: 1077665542529015394}
   m_Layer: 0
-  m_Name: BasicBlockPrefab
+  m_Name: ThrowableCube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -5,8 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem.XR;
 
-public class Block : MonoBehaviour
-{
+public class Block : MonoBehaviour {
     [SerializeField]
     public ArrayList connections;
     public ConnectionPoints connectionPoints;
@@ -17,11 +16,10 @@ public class Block : MonoBehaviour
     private Rigidbody rigidBody;
     public bool isGrabbed;
     GameObject thisCube;
-    
-    
+
+
     // Start is called before the first frame update
-    void Start()
-    {
+    void Start() {
         rigidBody = gameObject.GetComponent<Rigidbody>();
         connectionPoints = new ConnectionPoints(this.gameObject.tag);
         connections = connectionPoints.getPoints();
@@ -41,7 +39,7 @@ public class Block : MonoBehaviour
                 Pin topPin = pinT.AddComponent<Pin>();
                 topPin.setPinType("Male");
                 topPin.setPinGO(pinT);
-               
+
                 pins.Add(topPin);
 
                 break;
@@ -84,33 +82,33 @@ public class Block : MonoBehaviour
 
             }
         }
-        
+
     }
 
     // Update is called once per frame
-    void Update()
-    {
-        
+    void Update() {
+
     }
 
-    
+
     public void Grab() {
-       
+
         rigidBody.isKinematic = false;
         isGrabbed = true;
-        this.gameObject.transform.rotation = new Quaternion(0,0,0,0);
-      
+        this.gameObject.transform.rotation = new Quaternion(0, 0, 0, 0);
+
 
     }
     public void Release() {
 
         rigidBody.isKinematic = true;
         gameObject.transform.rotation = new Quaternion(0, 0, 0, 0);
-        isGrabbed = false ;
-        foreach(Pin pin in pins) {
+        isGrabbed = false;
+        foreach (Pin pin in pins) {
             print("Release");
-            if(pin.canSnap) {
+            if (pin.canSnap) {
                 Snap(pin);
+                pin.canSnap = false;
             }
         }
 
@@ -122,16 +120,16 @@ public class Block : MonoBehaviour
         float otherCubeX = otherCube.transform.position.x;
         float otherCubeY = otherCube.transform.position.y;
         float otherCubeZ = otherCube.transform.position.z;
-        float otherCubeScaleY = otherCube.transform.localScale.y/10;
+        float otherCubeScaleY = otherCube.transform.localScale.y / 10;
         float otherCubeScaleZ = otherCube.transform.localScale.z / 10;
-        
+
         Vector3 newPosition = this.gameObject.transform.position;
         print(pin.gameObject.name);
-       
+
         switch (pin.gameObject.name) {
-            
+
             case "Bottom":
-            newPosition = new Vector3(otherCubeX,   0.12f, otherCubeZ);
+            newPosition = new Vector3(otherCubeX, 0.12f, otherCubeZ);
             this.gameObject.transform.position = newPosition;
 
             break;
@@ -142,7 +140,7 @@ public class Block : MonoBehaviour
 
             break;
             case "Right":
-            newPosition = new Vector3(otherCubeX, otherCubeY , otherCubeZ - otherCubeScaleZ);
+            newPosition = new Vector3(otherCubeX, otherCubeY, otherCubeZ - otherCubeScaleZ);
             this.gameObject.transform.position = newPosition;
 
             print("TOP INSIDE SWITCH");
@@ -155,18 +153,29 @@ public class Block : MonoBehaviour
             break;
         }
         Block otherCubeBlock = otherCube.GetComponent<Block>();
-        foreach(Pin otherPin in otherCubeBlock.pins) {
-            if(otherPin.canSnap) {
+        foreach (Pin otherPin in otherCubeBlock.pins) {
+            if (otherPin.canSnap) {
                 otherPin.isConnected = true;
                 otherPin.canSnap = false;
                 otherPin.setConnectedBlock(this.gameObject);
+                
             }
+
+
+
+            print("Snapping");
         }
-        pin.setConnectedBlock(otherCube);
-        
-        print("Snapping");
-    }
+        foreach (Pin thispin in this.pins) {
+            if (thispin.canSnap) {
+                thispin.isConnected = true;
+                thispin.canSnap = false;
+                thispin.setConnectedBlock(otherCube);
+
+            }
+            print("Snapping");
+        }
 
 
 
+        }
 }

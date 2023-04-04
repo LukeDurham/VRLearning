@@ -14,8 +14,9 @@ public class Pin : MonoBehaviour
     public bool canSnap = false;
     public GameObject otherBlockCollision;
     public GameObject connectedBlock;
+    public GameObject currentConnectedBlock;
     // Start is called before the first frame update
-    
+
     void Start()
     {
         
@@ -36,7 +37,7 @@ public class Pin : MonoBehaviour
         if (otherCube.gameObject.name != "ThrowableCube" || otherCube.gameObject == this.gameObject.transform.parent.gameObject) { return; }
         Block otherBlockScript = otherCube.gameObject.GetComponent<Block>();
         foreach (Pin otherPin in otherBlockScript.pins) {
-            if ( this.pinType != otherPin.pinType && this.gameObject.name != otherPin.gameObject.name) {
+            if ( IsConnected() == false && this.pinType != otherPin.pinType && this.gameObject.name != otherPin.gameObject.name) {
                 canSnap = true;
                 otherBlockCollision = otherCube.gameObject;
             }
@@ -68,6 +69,7 @@ public class Pin : MonoBehaviour
 
        
     }
+
 
 
 
