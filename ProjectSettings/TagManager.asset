@@ -7,6 +7,15 @@ TagManager:
   - projectile
   - FxTemporaire
   - Block
+  - SnapZone
+  - start
+  - if
+  - pin
+  - conditional
+  - print
+  - for
+  - while
+  - end
   layers:
   - Default
   - TransparentFX
