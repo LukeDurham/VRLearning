@@ -16,6 +16,9 @@ TagManager:
   - for
   - while
   - end
+  - var
+  - operator
+  - value
   layers:
   - Default
   - TransparentFX

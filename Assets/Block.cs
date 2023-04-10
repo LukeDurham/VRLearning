@@ -16,13 +16,14 @@ public class Block : MonoBehaviour {
     private Rigidbody rigidBody;
     public bool isGrabbed;
     GameObject thisCube;
-
+   
 
     // Start is called before the first frame update
     void Start() {
         rigidBody = gameObject.GetComponent<Rigidbody>();
         connectionPoints = new ConnectionPoints(this.gameObject.tag);
         connections = connectionPoints.getPoints();
+        blockTag = this.gameObject.tag;
         //float cubeSizeX = this.gameObject.transform.localScale.x;
         float cubeSizeY = this.gameObject.transform.localScale.y;
         float cubeSizeZ = this.gameObject.transform.localScale.z;

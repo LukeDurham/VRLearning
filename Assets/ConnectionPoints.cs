@@ -46,7 +46,19 @@ public class ConnectionPoints
             points.Add("Bottom");
             points.Add("Right");
             break;
-
+            case "var":
+            points.Add("Top");
+            points.Add("Bottom");
+            points.Add("Right");
+            points.Add("Left");
+            break;
+            case "value":
+            points.Add("Left");
+            break;
+            case "operator":
+            points.Add("Left");
+            points.Add("Right");
+            break;
 
         }
 
