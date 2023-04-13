@@ -130,7 +130,8 @@ public class Compile : MonoBehaviour
             break;
             case "print": printVar(block);
             break;
-            case "var": initializeVar(block);
+            case "var": if(block.gameObject.GetComponent<Variable>())
+                    initializeVar(block);
             break;
            
             
@@ -150,26 +151,38 @@ public class Compile : MonoBehaviour
             var.Value = getBlockFromUniqueID(compile[position + 2]).gameObject.GetComponent<Value>().Val;
             variables.Add(var.VarName, var.Value);
         }
-
     }
-    private void setValueOfVar(string varName, string value) {
-        foreach (KeyValuePair<string, string> str in variables) {
-           
+
+    private void checkVar(Block block) {
+
+        Variable var = block.gameObject.GetComponent<Variable>();
+        var.VarName = block.gameObject.GetComponentInChildren<TextMeshPro>().text;
+        int position = compile.IndexOf(block.uniqueID);
+        print("position" + position);
+        print(compile.ToString());
+        if(variables.ContainsKey(var.VarName)) {
+            if (getBlockFromUniqueID(compile[position + 1]).tag == "operator" && getBlockFromUniqueID(compile[position + 2]).tag == "value") {
+                setValueOfVar(var.VarName, getBlockFromUniqueID(compile[position + 2]).gameObject.GetComponent<Value>().Val);
+            }
         }
     }
+    private void setValueOfVar(string varName, string value) {
+        variables[varName] = varName;
+        variables[value] = value ;
+
+    }
+
     private void printFunction(string text) {
         sb.Append(text);
         sb.Append("\n");
     }
     private void printVar(Block block) {
 
-        
-      
         int position = compile.IndexOf(block.uniqueID);
         print("position" + position);
         print(compile.ToString());
         if (getBlockFromUniqueID(compile[position + 1]).tag == "var") {
-            sb.Append(getBlockFromUniqueID(compile[position + 1]).gameObject.GetComponent<Value>().Val);
+            sb.Append(getBlockFromUniqueID(compile[position + 1]).gameObject.GetComponent<Variable>().Value);
             
         }
 
