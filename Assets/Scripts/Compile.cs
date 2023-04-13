@@ -14,11 +14,20 @@ public class Compile : MonoBehaviour
     public List<Block> blocks = new List<Block>();
     StringBuilder sb = new StringBuilder();
     Dictionary<string, string> variables = new Dictionary<string, string>();
+    [SerializeField]
+    public Material blue;
+    [SerializeField]
+    public Material red;
+    [SerializeField]
+    GameObject cube;
+    public List<int> allBlockID = new List<int>();
+
     // Start is called before the first frame update
     void Start()
     {
         toPrint.text = "";
         compile.Clear();
+        addAllBlocksID();
     }
 
     // Update is called once per frame
@@ -29,7 +38,38 @@ public class Compile : MonoBehaviour
             
         }
     }
+    public void addAllBlocksID() {
+        print("Get all Block and ID: ");
+        GameObject[] allBlocks = GameObject.FindGameObjectsWithTag("Block");
 
+        foreach (GameObject blocks in allBlocks) {
+           
+            Block thisBlock = blocks.gameObject.GetComponentInParent<Block>();
+            allBlockID.Add(thisBlock.uniqueID);
+            checkForValidID(thisBlock);
+        }
+
+    }
+    public void checkForValidID(Block block) {
+
+        if (block.tag == "end") {
+            block.uniqueID = -1;
+            return;
+            }
+        if (block.tag == "start") {
+            block.uniqueID = 0;
+            return;
+        }
+        int count = allBlockID.Count;
+        while (allBlockID.Contains(block.uniqueID)) {
+
+            block.uniqueID = count;
+            count++;
+       }
+        
+        
+
+    }
     public void CompileCode() {
         print("compiling...");
         GameObject [] blockCount = GameObject.FindGameObjectsWithTag("Block");
@@ -130,7 +170,7 @@ public class Compile : MonoBehaviour
             break;
             case "print": printVar(block);
             break;
-            case "var": if(block.gameObject.GetComponent<Variable>())
+            case "var": 
                     initializeVar(block);
             break;
            
@@ -141,34 +181,43 @@ public class Compile : MonoBehaviour
 
     private void initializeVar(Block block) {
       
+
         Variable var = block.gameObject.GetComponent<Variable>();
         var.VarName = block.gameObject.GetComponentInChildren<TextMeshPro>().text;
         int position = compile.IndexOf(block.uniqueID);
         print("position" + position);
         print(compile.ToString());
+        //check if it exists
+        
         if (getBlockFromUniqueID(compile[position + 1]).tag == "operator" && getBlockFromUniqueID(compile[position + 2]).tag == "value") {
+
             getBlockFromUniqueID(compile[position + 2]).gameObject.GetComponent<Value>().Val = getBlockFromUniqueID(compile[position + 2]).gameObject.GetComponentInChildren<TextMeshPro>().text;
             var.Value = getBlockFromUniqueID(compile[position + 2]).gameObject.GetComponent<Value>().Val;
-            variables.Add(var.VarName, var.Value);
-        }
-    }
+            if(variables.ContainsKey(var.VarName)) {
+                variables[var.VarName] = var.Value;
 
-    private void checkVar(Block block) {
+            } else {
+                variables.Add(var.VarName, var.Value);
 
-        Variable var = block.gameObject.GetComponent<Variable>();
-        var.VarName = block.gameObject.GetComponentInChildren<TextMeshPro>().text;
-        int position = compile.IndexOf(block.uniqueID);
-        print("position" + position);
-        print(compile.ToString());
-        if(variables.ContainsKey(var.VarName)) {
-            if (getBlockFromUniqueID(compile[position + 1]).tag == "operator" && getBlockFromUniqueID(compile[position + 2]).tag == "value") {
-                setValueOfVar(var.VarName, getBlockFromUniqueID(compile[position + 2]).gameObject.GetComponent<Value>().Val);
             }
+        } else if(variables.ContainsKey(var.VarName)) {
+            var.Value = variables.GetValueOrDefault(var.VarName);
+           
+            
+
+            //print x (bool logic for val)
+
+
         }
+        //checkVar(block);
     }
+
+  
+   
     private void setValueOfVar(string varName, string value) {
         variables[varName] = varName;
         variables[value] = value ;
+      
 
     }
 
@@ -179,11 +228,30 @@ public class Compile : MonoBehaviour
     private void printVar(Block block) {
 
         int position = compile.IndexOf(block.uniqueID);
-        print("position" + position);
-        print(compile.ToString());
+        foreach (var vars in variables) {
+            print(vars.Key + " = " + vars.Value);
+        }
+        initializeVar(getBlockFromUniqueID(compile[position + 1]));
         if (getBlockFromUniqueID(compile[position + 1]).tag == "var") {
-            sb.Append(getBlockFromUniqueID(compile[position + 1]).gameObject.GetComponent<Variable>().Value);
-            
+
+            print("I should be printing ");
+            Variable connectedVar = getBlockFromUniqueID(compile[position + 1]).gameObject.GetComponent<Variable>();
+            if (connectedVar.Type.ToString().Equals("Color")) {
+                switch(connectedVar.Value.ToString().ToLower()) {
+                    case "blue":
+                        cube.GetComponent<Renderer>().material = blue;
+                    break;
+                    case "red":
+                    cube.GetComponent<Renderer>().material = red;
+                    break;
+                }
+            } else {
+                sb.Append(getBlockFromUniqueID(compile[position + 1]).gameObject.GetComponent<Variable>().Value.ToString());
+
+            }
+            foreach(var vars in variables) {
+                print(vars.Key + " = " + vars.Value);
+            }
         }
 
     }
@@ -196,4 +264,6 @@ public class Compile : MonoBehaviour
 
         return null;
     }
+
+
 }
