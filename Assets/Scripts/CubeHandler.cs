@@ -20,11 +20,7 @@ public class CubeHandler : MonoBehaviour {
         }
 
         if (Input.GetKeyDown(KeyCode.I)) {
-            ChangeColor(Color.blue);
-        }
-
-        if (Input.GetKeyDown(KeyCode.O)) {
-            MoveToPosition(new Vector3(100, 10, 100), 1);
+           // ChangeColor(Color.blue);
         }
 
         if (Input.GetKeyDown(KeyCode.P)) {
@@ -43,6 +39,8 @@ public class CubeHandler : MonoBehaviour {
         GetComponent<Renderer>().material.color = newColor;
     }
 
+    //Removed move functionality as it was not needed for the project
+    /*
     public void MoveToPosition(Vector3 newPosition, float speed) {
         StartCoroutine(SlowMover(newPosition, speed));
     }
@@ -53,9 +51,10 @@ public class CubeHandler : MonoBehaviour {
             yield return null;
         }
     }
+    */
 
     public void RotateCube(int rotationAmount) {
-        transform.Rotate(new Vector3(0, cube.transform.rotation.y + rotationAmount, 0));
+        transform.Rotate(new Vector3(0, rotationAmount, 0));
     }
 
 }

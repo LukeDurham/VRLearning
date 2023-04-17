@@ -21,6 +21,7 @@ TagManager:
   - CubeIncSize
   - CubeColor
   - CubeRotate
+  - Color
   layers:
   - Default
   - TransparentFX

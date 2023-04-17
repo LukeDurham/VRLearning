@@ -59,7 +59,26 @@ public class ConnectionPoints
             points.Add("Left");
             points.Add("Right");
             break;
-
+            case "CubeDecSize":
+            points.Add("Top");
+            points.Add("Bottom");
+            break;
+            case "CubeColor":
+            points.Add("Top");
+            points.Add("Bottom");
+            points.Add("Right");
+            break;
+            case "CubeIncSize":
+            points.Add("Top");
+            points.Add("Bottom");
+            break;
+            case "CubeRotate":
+            points.Add("Top");
+            points.Add("Bottom");
+            break;
+            case "Color":
+            points.Add("Left");
+            break;
         }
 
        

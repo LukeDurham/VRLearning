@@ -6,6 +6,7 @@ using TMPro;
 using UnityEngine.InputSystem.Controls;
 using System.Text;
 using System;
+using Unity.VisualScripting;
 
 public class Compile : MonoBehaviour
 {
@@ -153,6 +154,7 @@ public class Compile : MonoBehaviour
         for (int i = 0; i < compile.Count; i++) {
            
             Block block = getBlockFromUniqueID(int.Parse(compile[i].ToString()));
+            //block = getBlockFromUniqueID(compile[i]);
             executeFunctionOfBlock(block);
             
         }
@@ -173,22 +175,33 @@ public class Compile : MonoBehaviour
             case "var": 
                     initializeVar(block);
             break;
+
             case "CubeColor": print("CubeColor Called");
-            GameObject.FindWithTag("ChangeableCube").GetComponent<CubeHandler>().ChangeColor(Color.blue);
+                GameObject.FindWithTag("ChangeableCube").GetComponent<CubeHandler>().ChangeColor(getColor(block));
             break;
             case "CubeRotate": print("CubeRotate Called");
-            GameObject.FindWithTag("ChangeableCube").GetComponent<CubeHandler>().RotateCube(15);
+                GameObject.FindWithTag("ChangeableCube").GetComponent<CubeHandler>().RotateCube(15);
             break;
             case "CubeIncSize": print("CubeIncSize Called");
-            GameObject.FindWithTag("ChangeableCube").GetComponent<CubeHandler>().ChangeScale(10);
+                GameObject.FindWithTag("ChangeableCube").GetComponent<CubeHandler>().ChangeScale((float) .05);
             break;
             case "CubeDecSize": print("CubeDecSize Called");
-            GameObject.FindWithTag("ChangeableCube").GetComponent<CubeHandler>().ChangeScale(-10);
+                GameObject.FindWithTag("ChangeableCube").GetComponent<CubeHandler>().ChangeScale((float) -.05);
             break;
-           
-            
+
+
         }
         return "";
+    }
+    private Color getColor(Block block) {
+        int colorIndex = compile.IndexOf(block.uniqueID) + 1;
+        Block colorBlock = getBlockFromUniqueID(compile[colorIndex]);
+        print(colorBlock.uniqueID);
+        //Color blockColor = colorBlock.gameObject.transform.GetComponentInChildren<Renderer>().material.color;
+        //Color blockColor = colorBlock.gameObject.GetComponentInChildren<Renderer>().material.color;
+        Color blockColor = colorBlock.gameObject.transform.Find("Cube").GetComponent<Renderer>().material.color;
+        print(blockColor.ToString());
+        return blockColor;
     }
 
     private void initializeVar(Block block) {
