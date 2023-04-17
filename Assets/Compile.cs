@@ -133,6 +133,18 @@ public class Compile : MonoBehaviour
             case "var": if(block.gameObject.GetComponent<Variable>())
                     initializeVar(block);
             break;
+            case "CubeColor": print("CubeColor Called");
+            GameObject.FindWithTag("ChangeableCube").GetComponent<CubeHandler>().ChangeColor(Color.blue);
+            break;
+            case "CubeRotate": print("CubeRotate Called");
+            GameObject.FindWithTag("ChangeableCube").GetComponent<CubeHandler>().RotateCube(15);
+            break;
+            case "CubeIncSize": print("CubeIncSize Called");
+            GameObject.FindWithTag("ChangeableCube").GetComponent<CubeHandler>().ChangeScale(10);
+            break;
+            case "CubeDecSize": print("CubeDecSize Called");
+            GameObject.FindWithTag("ChangeableCube").GetComponent<CubeHandler>().ChangeScale(-10);
+            break;
            
             
         }

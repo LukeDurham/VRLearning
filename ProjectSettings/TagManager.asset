@@ -4,21 +4,23 @@
 TagManager:
   serializedVersion: 2
   tags:
+  - var
+  - Block
+  - value
   - projectile
   - FxTemporaire
-  - Block
-  - SnapZone
-  - start
-  - if
-  - pin
-  - conditional
-  - print
-  - for
-  - while
-  - end
-  - var
   - operator
-  - value
+  - pin
+  - if
+  - print
+  - end
+  - start
+  - ChangeableCube
+  - SnapZone
+  - CubeDecSize
+  - CubeIncSize
+  - CubeColor
+  - CubeRotate
   layers:
   - Default
   - TransparentFX
