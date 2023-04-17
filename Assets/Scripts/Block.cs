@@ -100,7 +100,9 @@ public class Block : MonoBehaviour {
         rigidBody.isKinematic = false;
         isGrabbed = true;
         this.gameObject.transform.rotation = new Quaternion(0, 0, 0, 0);
-
+       // foreach(Pin pin in pins) {
+       //     pin.isConnected = false;
+       // }
 
     }
     public void Release() {

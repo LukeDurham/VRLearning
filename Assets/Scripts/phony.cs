@@ -6,8 +6,7 @@ using TMPro;
 public class phony : MonoBehaviour
 {
 
-    [SerializeField]
-    private TextMeshPro _textMeshPro;
+  
     // Start is called before the first frame update
     void Start()
     {
@@ -21,8 +20,13 @@ public class phony : MonoBehaviour
     }
     public void ChangeText() {
 
-        _textMeshPro.text = "Compiler Error";
+        
 
+    }
+
+    public void buttonPress() {
+        print("pressed button to compile");
+        GameObject.Find("Cube (3)").GetComponent<Compile>().CompileCode();
     }
 } 
 

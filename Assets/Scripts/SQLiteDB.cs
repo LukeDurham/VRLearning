@@ -41,22 +41,22 @@ public class SQLiteDB : MonoBehaviour
 
     private IDbConnection CreateAndOpenDatabase() { // Opens (or Creates) the database and returns it
 
-        string dbUri = "URI = file:MyDatabase.sqlite";
+        string dbUri = "URI = file:VRLearningLevelScores.sqlite";
         IDbConnection dbConnection = new SqliteConnection(dbUri);
         dbConnection.Open();
 
         IDbCommand dbCommandCreateTable = dbConnection.CreateCommand();
-        dbCommandCreateTable.CommandText = "CREATE TABLE IF NOT EXISTS progress (id INTEGER PRIMARY KEY AUTOINCREMENT, grade TEXT, firstName TEXT, lastName TEXT, completed INTEGER, ";
+        dbCommandCreateTable.CommandText = "CREATE TABLE IF NOT EXISTS progress (id INTEGER PRIMARY KEY AUTOINCREMENT, firstName TEXT, lastName TEXT, grade TEXT, completed INTEGER)";
         dbCommandCreateTable.ExecuteReader();
 
         return dbConnection;
     }
 
-    public int RegisterUser(string firstName, string lastName, string grade) { //Registers the User
+    public int RegisterUser(string firstName, string lastName, int grade) { //Registers the User
 
         string fName = firstName;
         string lName = lastName;
-        string Grade = grade;
+        int Grade = grade;
         IDbConnection dbConnection = CreateAndOpenDatabase();
         IDbCommand dbCommandInsertValue = dbConnection.CreateCommand();
 
@@ -81,7 +81,7 @@ public class SQLiteDB : MonoBehaviour
 
 
     }
-    public bool hasUser(string firstName, string lastName, string grade) { //returns true if the user already exists inside the database
+    public bool hasUser(string firstName, string lastName, int grade) { //returns true if the user already exists inside the database
 
 
         if (getID(firstName, lastName, grade) == -1) {
@@ -92,7 +92,7 @@ public class SQLiteDB : MonoBehaviour
 
     }
 
-    public int getID(string firstName, string lastName, string grade) { //returns the ID of a user. If user doesn't exist, it returns -1
+    public int getID(string firstName, string lastName, int grade) { //returns the ID of a user. If user doesn't exist, it returns -1
 
         int id = -1;
         IDbConnection dbConnection = CreateAndOpenDatabase();
@@ -114,34 +114,20 @@ public class SQLiteDB : MonoBehaviour
     }
 
 
-    public void addCompletionofLevel(int completedLevel, int userID, int level) { //Adds whether this user has completed a level.
+    public void addCompletionofLevel(int completedLevel, int userID) { //Adds whether this user has completed a level.
         IDbConnection dbConnection = CreateAndOpenDatabase();
         IDbCommand dbCommandInsertValue = dbConnection.CreateCommand();
 
 
-        switch (level) {
-
-            //control score (BAC 0)
-            case 0:
 
 
-            dbCommandInsertValue.CommandText = "UPDATE progress SET completedLevel = '" + completedLevel + "'  WHERE ID =  '" + userID + "'";
+            dbCommandInsertValue.CommandText = "UPDATE progress SET lvl" + completedLevel + " = '" + 1 + "'  WHERE ID =  '" + userID + "'";
 
             dbCommandInsertValue.ExecuteNonQuery();
             dbConnection.Close();
-            print("Added level completion");
-            break;
-
-            default:
-
-
-            dbCommandInsertValue.CommandText = "UPDATE progress SET lvl" + level + " = '" + completedLevel + "'  WHERE ID =  '" + userID + "'";
-
-            dbCommandInsertValue.ExecuteNonQuery();
-            dbConnection.Close();
-            print("Added level " + level + " completion");
-            break;
-        }
+            print("Added level " + completedLevel + " completion");
+            
+        
 
 
 

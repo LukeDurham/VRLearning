@@ -180,10 +180,12 @@ public class Compile : MonoBehaviour
     }
 
     private void initializeVar(Block block) {
-      
-
-        Variable var = block.gameObject.GetComponent<Variable>();
-        var.VarName = block.gameObject.GetComponentInChildren<TextMeshPro>().text;
+        Variable var = null;
+        if (block.tag == "var") {
+            var = block.gameObject.GetComponent<Variable>();
+            var.VarName = block.gameObject.GetComponentInChildren<TextMeshPro>().text;
+        }
+        
         int position = compile.IndexOf(block.uniqueID);
         print("position" + position);
         print(compile.ToString());
@@ -193,6 +195,8 @@ public class Compile : MonoBehaviour
 
             getBlockFromUniqueID(compile[position + 2]).gameObject.GetComponent<Value>().Val = getBlockFromUniqueID(compile[position + 2]).gameObject.GetComponentInChildren<TextMeshPro>().text;
             var.Value = getBlockFromUniqueID(compile[position + 2]).gameObject.GetComponent<Value>().Val;
+            
+            
             if(variables.ContainsKey(var.VarName)) {
                 variables[var.VarName] = var.Value;
 
@@ -202,8 +206,6 @@ public class Compile : MonoBehaviour
             }
         } else if(variables.ContainsKey(var.VarName)) {
             var.Value = variables.GetValueOrDefault(var.VarName);
-           
-            
 
             //print x (bool logic for val)
 
@@ -236,19 +238,11 @@ public class Compile : MonoBehaviour
 
             print("I should be printing ");
             Variable connectedVar = getBlockFromUniqueID(compile[position + 1]).gameObject.GetComponent<Variable>();
-            if (connectedVar.Type.ToString().Equals("Color")) {
-                switch(connectedVar.Value.ToString().ToLower()) {
-                    case "blue":
-                        cube.GetComponent<Renderer>().material = blue;
-                    break;
-                    case "red":
-                    cube.GetComponent<Renderer>().material = red;
-                    break;
-                }
-            } else {
-                sb.Append(getBlockFromUniqueID(compile[position + 1]).gameObject.GetComponent<Variable>().Value.ToString());
+            
+            sb.Append(getBlockFromUniqueID(compile[position + 1]).gameObject.GetComponent<Variable>().Value.ToString());
+                
 
-            }
+           
             foreach(var vars in variables) {
                 print(vars.Key + " = " + vars.Value);
             }
