@@ -10,6 +10,7 @@ using Unity.VisualScripting;
 
 public class Compile : MonoBehaviour
 {
+    CodeDisplay codeDisplay = new CodeDisplay();
     public List<int> compile = new List<int>();
     public TMPro.TextMeshPro toPrint;
     public List<Block> blocks = new List<Block>();
@@ -167,13 +168,18 @@ public class Compile : MonoBehaviour
         //Tags: conditional, variable, for, if, start, end, etc
         switch(block.tag) {
             case "start": //nothing needs to happen here
+                codeDisplay.StartBlock();
             break;
-            case "end": 
+            case "end":
+                codeDisplay.EndBlock(block);
             break;
-            case "print": printVar(block);
+            case "print": 
+                printVar(block);
+                codeDisplay.PrintBlock(block);
             break;
             case "var": 
-                    initializeVar(block);
+                initializeVar(block);
+                codeDisplay.VarBlock(block);
             break;
 
             case "CubeColor": print("CubeColor Called");
@@ -181,12 +187,15 @@ public class Compile : MonoBehaviour
             break;
             case "CubeRotate": print("CubeRotate Called");
                 GameObject.FindWithTag("ChangeableCube").GetComponent<CubeHandler>().RotateCube(15);
+                codeDisplay.RotateBlock(block);
             break;
             case "CubeIncSize": print("CubeIncSize Called");
                 GameObject.FindWithTag("ChangeableCube").GetComponent<CubeHandler>().ChangeScale((float) .05);
+                codeDisplay.SizeBlock(block);
             break;
             case "CubeDecSize": print("CubeDecSize Called");
                 GameObject.FindWithTag("ChangeableCube").GetComponent<CubeHandler>().ChangeScale((float) -.05);
+                codeDisplay.SizeBlock(block);
             break;
 
 
@@ -196,11 +205,9 @@ public class Compile : MonoBehaviour
     private Color getColor(Block block) {
         int colorIndex = compile.IndexOf(block.uniqueID) + 1;
         Block colorBlock = getBlockFromUniqueID(compile[colorIndex]);
-        print(colorBlock.uniqueID);
-        //Color blockColor = colorBlock.gameObject.transform.GetComponentInChildren<Renderer>().material.color;
-        //Color blockColor = colorBlock.gameObject.GetComponentInChildren<Renderer>().material.color;
+
         Color blockColor = colorBlock.gameObject.transform.Find("Cube").GetComponent<Renderer>().material.color;
-        print(blockColor.ToString());
+        codeDisplay.ColorBlock(blockColor);
         return blockColor;
     }
 
